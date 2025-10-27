@@ -1,0 +1,103 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{% if object %}Редактирование{% else %}Создание{% endif %} подписки - Менеджер Подписок{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{% if object %}Редактирование подписки{% else %}Создание новой подписки{% endif %}</h1>
+    
+    <form method="post" style="margin-top: 30px;">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_company">Компания *</label>
+            {{ form.company }}
+            {% if form.company.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.company.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_plan_name">Название плана *</label>
+            {{ form.plan_name }}
+            <small style="display: block; color: #7f8c8d; margin-top: 5px;">
+                Например: Базовая, Продвинутая, Премиум
+            </small>
+            {% if form.plan_name.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.plan_name.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_price">Цена (₽) *</label>
+            {{ form.price }}
+            {% if form.price.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.price.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_billing_period">Период оплаты *</label>
+            {{ form.billing_period }}
+            {% if form.billing_period.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.billing_period.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_status">Статус *</label>
+            {{ form.status }}
+            {% if form.status.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.status.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_start_date">Дата начала *</label>
+            {{ form.start_date }}
+            <small style="display: block; color: #7f8c8d; margin-top: 5px;">
+                Формат: ГГГГ-ММ-ДД (например: 2024-01-15)
+            </small>
+            {% if form.start_date.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.start_date.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_next_billing_date">Следующая дата оплаты *</label>
+            {{ form.next_billing_date }}
+            <small style="display: block; color: #7f8c8d; margin-top: 5px;">
+                Формат: ГГГГ-ММ-ДД (например: 2024-02-15)
+            </small>
+            {% if form.next_billing_date.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.next_billing_date.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_end_date">Дата окончания (необязательно)</label>
+            {{ form.end_date }}
+            <small style="display: block; color: #7f8c8d; margin-top: 5px;">
+                Оставьте пустым для бессрочной подписки
+            </small>
+            {% if form.end_date.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.end_date.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_notes">Заметки</label>
+            {{ form.notes }}
+            {% if form.notes.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.notes.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button type="submit" class="btn btn-success">💾 Сохранить</button>
+            <a href="{% url 'subscription-list' %}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

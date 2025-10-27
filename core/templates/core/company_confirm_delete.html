@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Удаление компании - Менеджер Подписок{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Подтверждение удаления</h1>
+    
+    <div style="margin: 30px 0; padding: 20px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+        <p style="font-size: 1.1rem;">
+            Вы уверены, что хотите удалить компанию <strong>"{{ object.name }}"</strong>?
+        </p>
+        <p style="margin-top: 10px; color: #856404;">
+            ⚠️ Внимание: Это также удалит все подписки, связанные с этой компанией!
+        </p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">🗑️ Да, удалить</button>
+        <a href="{% url 'company-list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}
+

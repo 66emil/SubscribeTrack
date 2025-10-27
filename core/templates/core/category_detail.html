@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ category.name }} - Менеджер Подписок{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>📁 {{ category.name }}</h1>
+        <div>
+            <a href="{% url 'category-list' %}" class="btn btn-secondary">Назад к списку</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'category-update' category.pk %}" class="btn">Редактировать</a>
+                <a href="{% url 'category-delete' category.pk %}" class="btn btn-danger">Удалить</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <p><strong>Описание:</strong></p>
+        <p style="margin-top: 10px;">{{ category.description|default:"Описание отсутствует" }}</p>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <p><strong>Дата создания:</strong> {{ category.created_at|date:"d.m.Y H:i" }}</p>
+        <p><strong>Последнее обновление:</strong> {{ category.updated_at|date:"d.m.Y H:i" }}</p>
+    </div>
+
+    <h2>Компании в этой категории</h2>
+    {% if category.companies.all %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+            {% for company in category.companies.all %}
+                <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #f9f9f9;">
+                    <h3 style="margin-bottom: 10px;">{{ company.name }}</h3>
+                    <p style="font-size: 0.9rem; color: #666;">{{ company.description|default:""|truncatewords:15 }}</p>
+                    <a href="{% url 'company-detail' company.pk %}" class="btn" style="margin-top: 10px; padding: 6px 12px; font-size: 12px;">Подробнее</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: #7f8c8d; margin-top: 20px;">В этой категории пока нет компаний.</p>
+    {% endif %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ company.name }} - Менеджер Подписок{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>🏢 {{ company.name }}</h1>
+        <div>
+            <a href="{% url 'company-list' %}" class="btn btn-secondary">Назад к списку</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'company-update' company.pk %}" class="btn">Редактировать</a>
+                <a href="{% url 'company-delete' company.pk %}" class="btn btn-danger">Удалить</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+        <div>
+            <h3>Основная информация</h3>
+            <div style="margin-top: 15px;">
+                <p style="margin-bottom: 10px;"><strong>Категория:</strong> 
+                    <a href="{% url 'category-detail' company.category.pk %}">{{ company.category.name }}</a>
+                </p>
+                
+                {% if company.website %}
+                    <p style="margin-bottom: 10px;"><strong>Веб-сайт:</strong> 
+                        <a href="{{ company.website }}" target="_blank">{{ company.website }}</a>
+                    </p>
+                {% endif %}
+
+                <p style="margin-bottom: 10px;"><strong>Дата создания:</strong> {{ company.created_at|date:"d.m.Y H:i" }}</p>
+                <p style="margin-bottom: 10px;"><strong>Последнее обновление:</strong> {{ company.updated_at|date:"d.m.Y H:i" }}</p>
+            </div>
+
+            {% if company.description %}
+                <h3 style="margin-top: 25px;">Описание</h3>
+                <p style="margin-top: 10px; line-height: 1.6;">{{ company.description }}</p>
+            {% endif %}
+        </div>
+
+        <div>
+            <h3>Планы подписок</h3>
+            {% if company.subscription_plans %}
+                <div style="margin-top: 15px;">
+                    {% for plan_name, price in company.subscription_plans.items %}
+                        <div style="padding: 15px; margin-bottom: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px;">
+                            <h4 style="margin-bottom: 5px;">{{ plan_name }}</h4>
+                            <p style="font-size: 1.5rem; font-weight: bold;">{{ price }} ₽</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'subscription-create' %}?company={{ company.pk }}" class="btn btn-success" style="margin-top: 20px; width: 100%; text-align: center;">
+                        ➕ Добавить эту подписку
+                    </a>
+                {% endif %}
+            {% else %}
+                <p style="margin-top: 15px; color: #7f8c8d;">Планы подписок не указаны.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

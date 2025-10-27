@@ -1,0 +1,92 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Компании - Менеджер Подписок{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>🏢 Компании</h1>
+        {% if user.is_authenticated %}
+            <a href="{% url 'company-create' %}" class="btn btn-success">➕ Добавить компанию</a>
+        {% endif %}
+    </div>
+
+    <!-- Фильтр по категориям -->
+    <div style="margin-bottom: 20px;">
+        <form method="get" style="display: flex; gap: 10px; align-items: center;">
+            <label for="category">Фильтр по категории:</label>
+            <select name="category" id="category" onchange="this.form.submit()" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="">Все категории</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    {% if companies %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+            {% for company in companies %}
+                <div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <h3 style="margin-bottom: 10px; color: #2c3e50;">{{ company.name }}</h3>
+                    <p style="font-size: 0.9rem; color: #7f8c8d; margin-bottom: 10px;">
+                        📁 {{ company.category.name }}
+                    </p>
+                    
+                    {% if company.description %}
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">
+                            {{ company.description|truncatewords:20 }}
+                        </p>
+                    {% endif %}
+
+                    {% if company.subscription_plans %}
+                        <div style="margin: 15px 0; padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                            <strong style="font-size: 0.9rem;">Планы подписок:</strong>
+                            <ul style="margin: 8px 0 0 20px; font-size: 0.85rem;">
+                                {% for plan_name, price in company.subscription_plans.items %}
+                                    <li>{{ plan_name }}: {{ price }} ₽</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <div style="margin-top: 15px; display: flex; gap: 8px;">
+                        <a href="{% url 'company-detail' company.pk %}" class="btn" style="padding: 6px 12px; font-size: 12px;">Подробнее</a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'company-update' company.pk %}" class="btn" style="padding: 6px 12px; font-size: 12px;">Редактировать</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">Первая</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+            {% endif %}
+            
+            <span style="padding: 8px 12px;">
+                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+            </span>
+            
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Следующая</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% else %}
+        <p style="text-align: center; padding: 40px; color: #7f8c8d;">
+            Пока нет компаний. 
+            {% if user.is_authenticated %}
+                <a href="{% url 'company-create' %}">Создайте первую компанию!</a>
+            {% endif %}
+        </p>
+    {% endif %}
+</div>
+{% endblock %}
+

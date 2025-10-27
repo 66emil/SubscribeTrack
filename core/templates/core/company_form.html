@@ -1,0 +1,70 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{% if object %}Редактирование{% else %}Создание{% endif %} компании - Менеджер Подписок{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{% if object %}Редактирование компании{% else %}Создание новой компании{% endif %}</h1>
+    
+    <form method="post" style="margin-top: 30px;">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_name">Название компании *</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.name.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_category">Категория *</label>
+            {{ form.category }}
+            {% if form.category.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.category.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_description">Описание</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.description.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_website">Веб-сайт</label>
+            {{ form.website }}
+            {% if form.website.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.website.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_logo_url">URL логотипа</label>
+            {{ form.logo_url }}
+            {% if form.logo_url.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.logo_url.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_subscription_plans">Планы подписок (JSON)</label>
+            <small style="display: block; color: #7f8c8d; margin-bottom: 5px;">
+                Формат: {"Базовая": "990", "Продвинутая": "1990", "Премиум": "2990"}
+            </small>
+            {{ form.subscription_plans }}
+            {% if form.subscription_plans.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.subscription_plans.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button type="submit" class="btn btn-success">💾 Сохранить</button>
+            <a href="{% url 'company-list' %}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

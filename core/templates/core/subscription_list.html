@@ -1,0 +1,96 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Мои подписки - Менеджер Подписок{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>💳 Мои подписки</h1>
+        <a href="{% url 'subscription-create' %}" class="btn btn-success">➕ Добавить подписку</a>
+    </div>
+
+    <!-- Статистика -->
+    <div class="stats-grid">
+        <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <h3>{{ total_subscriptions }}</h3>
+            <p>Всего подписок</p>
+        </div>
+        <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <h3>{{ active_subscriptions }}</h3>
+            <p>Активных подписок</p>
+        </div>
+        <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <h3>{{ total_monthly_cost }} ₽</h3>
+            <p>Ежемесячные расходы</p>
+        </div>
+    </div>
+
+    {% if subscriptions %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Компания</th>
+                    <th>План</th>
+                    <th>Цена</th>
+                    <th>Период</th>
+                    <th>Статус</th>
+                    <th>След. платеж</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subscription in subscriptions %}
+                <tr>
+                    <td>
+                        <strong>{{ subscription.company.name }}</strong><br>
+                        <small style="color: #7f8c8d;">{{ subscription.company.category.name }}</small>
+                    </td>
+                    <td>{{ subscription.plan_name }}</td>
+                    <td><strong>{{ subscription.price }} ₽</strong></td>
+                    <td>{{ subscription.get_billing_period_display }}</td>
+                    <td>
+                        <span style="padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; 
+                            {% if subscription.status == 'active' %}background: #d4edda; color: #155724;
+                            {% elif subscription.status == 'cancelled' %}background: #f8d7da; color: #721c24;
+                            {% elif subscription.status == 'expired' %}background: #d6d8d9; color: #383d41;
+                            {% elif subscription.status == 'paused' %}background: #fff3cd; color: #856404;
+                            {% endif %}">
+                            {{ subscription.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ subscription.next_billing_date|date:"d.m.Y" }}</td>
+                    <td>
+                        <a href="{% url 'subscription-detail' subscription.pk %}" class="btn" style="padding: 6px 12px; font-size: 12px;">Просмотр</a>
+                        <a href="{% url 'subscription-update' subscription.pk %}" class="btn" style="padding: 6px 12px; font-size: 12px;">Редактировать</a>
+                        <a href="{% url 'subscription-delete' subscription.pk %}" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;">Удалить</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">Первая</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+            {% endif %}
+            
+            <span style="padding: 8px 12px;">
+                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+            </span>
+            
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Следующая</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% else %}
+        <p style="text-align: center; padding: 40px; color: #7f8c8d;">
+            У вас пока нет подписок. <a href="{% url 'subscription-create' %}">Добавьте первую подписку!</a>
+        </p>
+    {% endif %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{% if object %}Редактирование{% else %}Создание{% endif %} категории - Менеджер Подписок{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{% if object %}Редактирование категории{% else %}Создание новой категории{% endif %}</h1>
+    
+    <form method="post" style="margin-top: 30px;">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_name">Название категории *</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.name.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_description">Описание</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <p style="color: #e74c3c; font-size: 0.9rem; margin-top: 5px;">{{ form.description.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button type="submit" class="btn btn-success">💾 Сохранить</button>
+            <a href="{% url 'category-list' %}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
