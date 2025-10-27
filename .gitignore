@@ -218,14 +218,18 @@ static_root/
 ehthumbs.db
 Desktop.ini
 
-# Django migrations (раскомментируйте если хотите исключить)
-# */migrations/
+# Django migrations - ВСЕ ФАЙЛЫ МИГРАЦИЙ ИСКЛЮЧЕНЫ
+**/migrations/**/*.py
+!**/migrations/__init__.py
 
-# Logs
+# Logs - ВСЕ ЛОГИ ИСКЛЮЧЕНЫ
 *.log
 logs/
+*.log.*
+**/*.log
 
-# Documentation
+# Documentation - ВСЕ README И ДОКУМЕНТАЦИЯ ИСКЛЮЧЕНЫ
+README.md
 *.md
 *.MD
 !README.md
